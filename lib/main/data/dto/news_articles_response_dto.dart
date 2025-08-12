@@ -26,24 +26,20 @@ class NewsArticlesResponseDto {
 
 @JsonSerializable()
 class ArticleDto {
-  final SourceDto source;
-  final String author;
-  final String title;
-  final String description;
-  final String url;
-  final String urlToImage;
-  final String publishedAt;
-  final String content;
+  final SourceDto? source;
+  final String? title;
+  final String? description;
+  final String? urlToImage;
+  final String? publishedAt;
+  final String? content;
 
   ArticleDto({
-    required this.source,
-    required this.author,
-    required this.title,
-    required this.description,
-    required this.url,
-    required this.urlToImage,
-    required this.publishedAt,
-    required this.content,
+    this.source,
+    this.title,
+    this.description,
+    this.urlToImage,
+    this.publishedAt,
+    this.content,
   });
 
   factory ArticleDto.fromJson(Map<String, dynamic> json) =>
@@ -54,10 +50,9 @@ class ArticleDto {
 
 @JsonSerializable()
 class SourceDto {
-  final String id;
   final String name;
 
-  SourceDto({required this.id, required this.name});
+  SourceDto({required this.name});
 
   factory SourceDto.fromJson(Map<String, dynamic> json) =>
       _$SourceDtoFromJson(json);

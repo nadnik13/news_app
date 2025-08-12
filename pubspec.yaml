@@ -12,9 +12,13 @@ dependencies:
     sdk: flutter
   go_router: ^16.1.0
   bloc: ^9.0.0
+  flutter_bloc: ^9.0.0
+  equatable: ^2.0.5
   get_it: ^8.2.0
   dio: ^5.9.0
   json_annotation: ^4.9.0
+  stream_transform: ^2.1.0
+  uuid: ^4.4.2
 
 dev_dependencies:
   flutter_test:

@@ -1,11 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import '../models/news_category.dart';
+
 part 'news_articles_request_dto.g.dart';
 
 @JsonSerializable(includeIfNull: false)
 class NewsArticlesRequestDto {
   final String country;
-  final Set<NewsCategories>? category;
+  final Set<NewsCategory>? category;
   final String? q;
   final int? pageSize;
   final int? page;
@@ -31,27 +33,10 @@ class NewsArticlesRequestDto {
 
     if (category != null && category!.isNotEmpty) {
       json['category'] = category!
-          .map((e) => _$NewsCategoriesEnumMap[e])
+          .map((e) => _$NewsCategoryEnumMap[e])
           .join(',');
     }
 
     return json;
   }
-}
-
-enum NewsCategories {
-  @JsonValue('business')
-  business,
-  @JsonValue('entertainment')
-  entertainment,
-  @JsonValue('general')
-  general,
-  @JsonValue('health')
-  health,
-  @JsonValue('science')
-  science,
-  @JsonValue('sports')
-  sports,
-  @JsonValue('technology')
-  technology,
 }

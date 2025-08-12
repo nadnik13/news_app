@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:news_app/main/data/dto/news_articles_request_dto.dart';
 
 import '../data/dto/news_articles_response_dto.dart';
+import '../data/models/news_category.dart';
 
 class NewsApiKeyHolder {
   static const key = String.fromEnvironment('api_key');
@@ -11,10 +12,10 @@ class ApiPath {
   static const topHeadlines = '/v2/top-headlines';
 }
 
-class NewsHttpClient {
+class NewsApiService {
   late final Dio dio;
 
-  NewsHttpClient() {
+  NewsApiService() {
     final options = BaseOptions(
       baseUrl: 'https://newsapi.org',
       connectTimeout: Duration(seconds: 10),
@@ -25,13 +26,12 @@ class NewsHttpClient {
   }
 
   Future<NewsArticlesResponseDto> fetchTopHeadlines({
-    Set<NewsCategories>? categories,
+    required int page,
+    required int pageSize,
+    required String country,
+    Set<NewsCategory>? categories,
     String? q,
-    country = 'us',
-    int page = 1,
-    int pageSize = 20,
   }) async {
-
     final request = NewsArticlesRequestDto(
       category: null,
       q: q,
@@ -49,6 +49,7 @@ class NewsHttpClient {
       ApiPath.topHeadlines,
       queryParameters: params,
     );
+    print(response);
     return NewsArticlesResponseDto.fromJson(response.data);
   }
 }
