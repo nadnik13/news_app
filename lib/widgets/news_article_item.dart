@@ -29,7 +29,7 @@ class NewsArticleItem extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => context.go('/one_news/${article.id}'),
+        onTap: () => context.go('/one_news', extra: article),
         // IntrinsicHeight тяжелый, можно избежать его использования,
         // если зафиксировать высоту карточки.
         child: IntrinsicHeight(

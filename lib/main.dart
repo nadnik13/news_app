@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_app/main/bloc/favorites_list_bloc.dart';
+import 'package:news_app/main/data/models/news_article.dart';
 import 'package:news_app/screens/favorites_screen.dart';
 import 'package:news_app/screens/home_screen.dart';
 import 'package:news_app/screens/one_news_screen.dart';
@@ -50,7 +51,7 @@ final _router = GoRouter(
                       BlocProvider(create: (_) => FiltersBloc()),
                       BlocProvider(
                         create:
-                            (context) => FavoritesListBlock(
+                            (context) => FavoritesListBloc(
                               repository: DI.favoritesListRepository,
                             ),
                       ),
@@ -64,10 +65,10 @@ final _router = GoRouter(
     ),
     GoRoute(
       name: 'one_news',
-      path: '/one_news/:id',
+      path: '/one_news',
       builder: (context, state) {
-        final id = state.pathParameters['id'];
-        return OneNewsScreen(id: id);
+        final article = state.extra as NewsArticle;
+        return OneNewsScreen(article: article);
       },
     ),
   ],
@@ -93,6 +94,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(routerConfig: _router);
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => FiltersBloc()),
+        BlocProvider(
+          create:
+              (context) =>
+                  FavoritesListBloc(repository: DI.favoritesListRepository),
+        ),
+      ],
+      child: MaterialApp.router(routerConfig: _router),
+    );
   }
 }

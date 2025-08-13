@@ -7,10 +7,10 @@ import '../infrastructure/repositories/favorites_list_repository.dart';
 part '../data/models/favorites_event.dart';
 part '../data/models/favorites_state.dart';
 
-class FavoritesListBlock extends Bloc<FavoritesEvent, FavoritesState> {
+class FavoritesListBloc extends Bloc<FavoritesEvent, FavoritesState> {
   final FavoritesListRepository repository;
 
-  FavoritesListBlock({required this.repository})
+  FavoritesListBloc({required this.repository})
     : super(const FavoritesState.initial()) {
     on<InitialFavoriteListRequested>(_onNewsInitial);
     on<FavoriteNewsAdded>(_onNewsAdded);
@@ -31,15 +31,18 @@ class FavoritesListBlock extends Bloc<FavoritesEvent, FavoritesState> {
   ) async {
     final next = {...state.articles, event.article}.toList();
     emit(state.copyWith(articles: next));
-    await repository.saveData(state.articles);
+    await repository.saveData(next);
   }
 
   Future<void> _onNewsRemoved(
     FavoriteNewsRemoved event,
     Emitter<FavoritesState> emit,
   ) async {
+    print("_onNewsRemoved");
+    print("size: ${state.articles.length}");
     final next = state.articles.where((e) => e != event.article).toList();
+    print("size: ${next}");
     emit(state.copyWith(articles: next));
-    await repository.saveData(state.articles);
+    await repository.saveData(next);
   }
 }

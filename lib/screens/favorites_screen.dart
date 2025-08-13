@@ -18,9 +18,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
   void initState() {
     super.initState();
     // Начальная загрузка из Shared Pref
-    context.read<FavoritesListBlock>().add(
-      const InitialFavoriteListRequested(),
-    );
+    context.read<FavoritesListBloc>().add(const InitialFavoriteListRequested());
   }
 
   @override
@@ -36,7 +34,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                 slivers: [
                   SliverPadding(
                     padding: const EdgeInsets.symmetric(horizontal: 19),
-                    sliver: BlocBuilder<FavoritesListBlock, FavoritesState>(
+                    sliver: BlocBuilder<FavoritesListBloc, FavoritesState>(
                       builder: (context, state) {
                         return SliverList.builder(
                           itemCount: state.articles.length,

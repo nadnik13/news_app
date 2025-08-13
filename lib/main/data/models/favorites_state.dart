@@ -8,6 +8,7 @@ class FavoritesState extends Equatable {
   const FavoritesState.initial() : articles = const [];
 
   FavoritesState copyWith({List<NewsArticle>? articles}) {
+    print("copyWith: ${articles?.length}");
     return FavoritesState(articles: articles ?? this.articles);
   }
 

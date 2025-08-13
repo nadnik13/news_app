@@ -1,11 +1,10 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:uuid/uuid.dart';
 
 part 'news_article.g.dart';
 
 @JsonSerializable()
-class NewsArticle {
-  final String id = Uuid().v4();
+class NewsArticle extends Equatable {
   final String title;
   final String subtitle;
   final String source;
@@ -26,4 +25,14 @@ class NewsArticle {
       _$NewsArticleFromJson(json);
 
   Map<String, dynamic> toJson() => _$NewsArticleToJson(this);
+
+  @override
+  List<Object?> get props => [
+    title,
+    subtitle,
+    source,
+    imageUrl,
+    publishedAt,
+    text,
+  ];
 }
