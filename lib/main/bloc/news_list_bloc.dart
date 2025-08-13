@@ -4,13 +4,13 @@ import 'package:stream_transform/stream_transform.dart';
 
 import '../data/models/news_article.dart';
 import '../data/models/news_category.dart';
-import '../infrastructure/repositories/news_repository.dart';
+import '../infrastructure/repositories/news_list_repository.dart';
 
 part '../data/models/news_list_event.dart';
 part '../data/models/news_list_state.dart';
 
 class NewsListBloc extends Bloc<NewsListEvent, NewsListState> {
-  final NewsRepository repository;
+  final NewsListRepository repository;
 
   NewsListBloc({required this.repository})
     : super(const NewsListState.initial()) {

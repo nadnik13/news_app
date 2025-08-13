@@ -1,5 +1,9 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:uuid/uuid.dart';
 
+part 'news_article.g.dart';
+
+@JsonSerializable()
 class NewsArticle {
   final String id = Uuid().v4();
   final String title;
@@ -17,4 +21,9 @@ class NewsArticle {
     required this.publishedAt,
     required this.text,
   });
+
+  factory NewsArticle.fromJson(Map<String, dynamic> json) =>
+      _$NewsArticleFromJson(json);
+
+  Map<String, dynamic> toJson() => _$NewsArticleToJson(this);
 }

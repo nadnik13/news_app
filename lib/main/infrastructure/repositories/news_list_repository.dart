@@ -1,10 +1,10 @@
 import 'package:news_app/main/data/mappers/news_article_mapper.dart';
 import 'package:news_app/main/data/models/news_category.dart';
 
+import '../../../services/news_list_api_service.dart';
 import '../../data/models/news_article.dart';
-import '../news_api_service.dart';
 
-abstract class NewsRepository {
+abstract class NewsListRepository {
   Future<List<NewsArticle>> getNews({
     required int page,
     required Set<NewsCategory> categories,
@@ -12,10 +12,10 @@ abstract class NewsRepository {
   });
 }
 
-class NewsRepositoryImpl implements NewsRepository {
-  final NewsApiService api;
+class NewsListRepositoryImpl implements NewsListRepository {
+  final NewsListApiService api;
 
-  NewsRepositoryImpl({required this.api});
+  NewsListRepositoryImpl({required this.api});
 
   @override
   Future<List<NewsArticle>> getNews({

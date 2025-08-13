@@ -1,28 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:news_app/main/bloc/favorites_list_bloc.dart';
 import 'package:news_app/screens/favorites_screen.dart';
 import 'package:news_app/screens/home_screen.dart';
-import 'package:news_app/widgets/app_shell_scaffold.dart';
 import 'package:news_app/screens/one_news_screen.dart';
+import 'package:news_app/widgets/app_shell_scaffold.dart';
 
+import 'di/get_it.dart';
 import 'main/bloc/filters_bloc.dart';
 import 'main/bloc/news_list_bloc.dart';
-import 'main/infrastructure/news_api_service.dart';
-import 'main/infrastructure/repositories/news_repository.dart';
 
 final _router = GoRouter(
   initialLocation: '/',
   routes: [
     StatefulShellRoute.indexedStack(
-      builder: (context, state, navShell) => AppShellScaffold(navigationShell: navShell),
+      builder:
+          (context, state, navShell) =>
+              AppShellScaffold(navigationShell: navShell),
       branches: [
-        StatefulShellBranch(routes: [
-          GoRoute(name: 'home', path: '/', builder: (context, state) => const HomeScreen()),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(name: 'favorites', path: '/favorites', builder: (context, state) => const FavoritesScreen()),
-        ]),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: 'home',
+              path: '/',
+              builder:
+                  (context, state) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(create: (_) => FiltersBloc()),
+                      BlocProvider(
+                        create:
+                            (context) =>
+                                NewsListBloc(repository: DI.newsListRepository),
+                      ),
+                    ],
+                    child: HomeScreen(),
+                  ),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: 'favorites',
+              path: '/favorites',
+              builder:
+                  (context, state) => MultiBlocProvider(
+                    providers: [
+                      BlocProvider(create: (_) => FiltersBloc()),
+                      BlocProvider(
+                        create:
+                            (context) => FavoritesListBlock(
+                              repository: DI.favoritesListRepository,
+                            ),
+                      ),
+                    ],
+                    child: const FavoritesScreen(),
+                  ),
+            ),
+          ],
+        ),
       ],
     ),
     GoRoute(
@@ -37,47 +74,25 @@ final _router = GoRouter(
 );
 
 void main() async {
-  // final client = NewsApiService();
-  // final categ = {NewsCategory.business, NewsCategory.sports};
-  //
-  // try {
-  //   final data = await client.fetchTopHeadlines(categories: categ);
-  //   print(data.articles?.first.urlToImage);
-  // } on DioException catch (e) {
-  //   print("Dio error: ${e.message}");
-  //   if (e.response != null) {
-  //     print("Status code: ${e.response?.statusCode}");
-  //     print("Response data: ${e.response?.data}");
-  //   }
-  // } catch (e) {
-  //   print("Unexpected error: $e");
-  // };
-
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    DI.init();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider<NewsRepository>(
-          create: (_) => NewsRepositoryImpl(api: NewsApiService()),
-        ),
-      ],
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (_) => FiltersBloc()),
-          BlocProvider(
-            create:
-                (context) =>
-                    NewsListBloc(repository: context.read<NewsRepository>()),
-          ),
-        ],
-        child: MaterialApp.router(routerConfig: _router),
-      ),
-    );
+    return MaterialApp.router(routerConfig: _router);
   }
 }

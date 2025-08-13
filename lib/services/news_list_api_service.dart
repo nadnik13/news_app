@@ -1,29 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:news_app/main/data/dto/news_articles_request_dto.dart';
 
-import '../data/dto/news_articles_response_dto.dart';
-import '../data/models/news_category.dart';
-
-class NewsApiKeyHolder {
-  static const key = String.fromEnvironment('api_key');
-}
+import '../main/data/dto/news_articles_response_dto.dart';
+import '../main/data/models/news_category.dart';
 
 class ApiPath {
   static const topHeadlines = '/v2/top-headlines';
 }
 
-class NewsApiService {
-  late final Dio dio;
+class NewsListApiService {
+  final Dio dio;
 
-  NewsApiService() {
-    final options = BaseOptions(
-      baseUrl: 'https://newsapi.org',
-      connectTimeout: Duration(seconds: 10),
-      receiveTimeout: Duration(seconds: 3),
-      queryParameters: {'apiKey': NewsApiKeyHolder.key},
-    );
-    dio = Dio(options);
-  }
+  const NewsListApiService({required this.dio});
 
   Future<NewsArticlesResponseDto> fetchTopHeadlines({
     required int page,
