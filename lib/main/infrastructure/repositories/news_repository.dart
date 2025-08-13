@@ -1,8 +1,8 @@
 import 'package:news_app/main/data/mappers/news_article_mapper.dart';
 import 'package:news_app/main/data/models/news_category.dart';
 
-import '../../infrastructure/news_api_service.dart';
-import '../models/news_article.dart';
+import '../../data/models/news_article.dart';
+import '../news_api_service.dart';
 
 abstract class NewsRepository {
   Future<List<NewsArticle>> getNews({

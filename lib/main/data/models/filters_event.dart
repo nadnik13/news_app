@@ -1,4 +1,4 @@
-part of '../../blocks/filters_blocks.dart';
+part of '../../bloc/filters_bloc.dart';
 
 sealed class FiltersEvent extends Equatable {
   const FiltersEvent();
@@ -9,6 +9,7 @@ sealed class FiltersEvent extends Equatable {
 
 final class SearchQueryChanged extends FiltersEvent {
   final String query;
+
   const SearchQueryChanged(this.query);
 
   @override
@@ -17,6 +18,7 @@ final class SearchQueryChanged extends FiltersEvent {
 
 final class FilterAdded extends FiltersEvent {
   final NewsCategory category;
+
   const FilterAdded(this.category);
 
   @override
@@ -25,6 +27,7 @@ final class FilterAdded extends FiltersEvent {
 
 final class FilterRemoved extends FiltersEvent {
   final NewsCategory category;
+
   const FilterRemoved(this.category);
 
   @override

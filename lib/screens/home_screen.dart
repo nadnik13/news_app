@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:news_app/widgets/categories_row_widget.dart';
+import 'package:go_router/go_router.dart';
+import 'package:news_app/widgets/bottom_menu.dart';
 import 'package:news_app/widgets/news_article_item.dart';
-import 'package:news_app/widgets/search_widget.dart';
 
-import '../main/blocks/filters_blocks.dart';
-import '../main/blocks/news_list_bloc.dart';
+import '../main/bloc/news_list_bloc.dart';
+import '../widgets/filters_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,62 +24,74 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        body: SafeArea(
+          bottom: false,
+          child: Stack(
             children: [
-              BlocListener<FiltersBloc, FiltersState>(
-                listener: (context, filtersState) {
-                  context.read<NewsListBloc>().add(
-                    NewsListWithFiltersRequested(
-                      searchQuery: filtersState.searchQuery,
-                      selectedCategories: filtersState.selectedCategories,
+              CustomScrollView(
+                slivers: [
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _PinnedHeaderDelegate(
+                      height: 120,
+                      child: const FiltersWidget(),
                     ),
-                  );
-                },
-                child: Column(
-                  children: [SearchWidget(), CategoriesRowWidget()],
-                ),
+                  ),
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 19),
+                    sliver: BlocBuilder<NewsListBloc, NewsListState>(
+                      builder: (context, state) {
+                        if (state.status == NewsListStatus.loading) {
+                          return const SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(child: CircularProgressIndicator()),
+                          );
+                        }
+                        if (state.status == NewsListStatus.failure) {
+                          return SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(
+                              child: Text(
+                                state.errorMessage ?? 'Ошибка загрузки',
+                              ),
+                            ),
+                          );
+                        }
+                        if (state.status == NewsListStatus.success) {
+                          if (state.items.isEmpty) {
+                            return const SliverFillRemaining(
+                              hasScrollBody: false,
+                              child: Center(child: Text('Ничего не найдено')),
+                            );
+                          }
+                          return SliverList.builder(
+                            itemCount: state.items.length,
+                            itemBuilder: (context, index) {
+                              final item = state.items[index];
+                              return NewsArticleItem(article: item);
+                            },
+                          );
+                        }
+                        return const SliverToBoxAdapter(
+                          child: SizedBox.shrink(),
+                        );
+                      },
+                    ),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 96)),
+                ],
               ),
-              Expanded(
-                child: BlocBuilder<NewsListBloc, NewsListState>(
-                  builder: (context, state) {
-                    if (state.status == NewsListStatus.loading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (state.status == NewsListStatus.failure) {
-                      return Center(
-                        child: Text(state.errorMessage ?? 'Ошибка загрузки'),
-                      );
-                    }
-                    if (state.status == NewsListStatus.success) {
-                      if (state.items.isEmpty) {
-                        return const Center(child: Text('Ничего не найдено'));
-                      }
-                      return ListView.separated(
-                        itemCount: state.items.length,
-                        separatorBuilder: (_, __) => const Divider(height: 1),
-                        itemBuilder: (context, index) {
-                          // TODO: подумать как сделать хорошо
-                          // if (index == state.items.length - 3) {
-                          //   final filters = context.read<FiltersBloc>().state;
-                          //   context.read<NewsListBloc>().add(
-                          //     NextPageRequested(
-                          //       selectedCategories: filters.selectedCategories,
-                          //       searchQuery: filters.searchQuery,
-                          //     ),
-                          //   );
-                          // }
-
-                          final item = state.items[index];
-                          return NewsArticleItem(article: item);
-                        },
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: BottomMenu(
+                  selected: BottomTab.home,
+                  onHomeTap: () {},
+                  onFavoritesTap: () => context.go('/favorites'),
                 ),
               ),
             ],
@@ -87,6 +99,37 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+}
+
+class _PinnedHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final double height;
+  final Widget child;
+
+  _PinnedHeaderDelegate({required this.height, required this.child});
+
+  @override
+  double get minExtent => height;
+
+  @override
+  double get maxExtent => height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      padding: const EdgeInsets.only(bottom: 8),
+      child: child,
+    );
+  }
+
+  @override
+  bool shouldRebuild(covariant _PinnedHeaderDelegate oldDelegate) {
+    return oldDelegate.height != height || oldDelegate.child != child;
   }
 }
 

@@ -49,7 +49,6 @@ class NewsApiService {
       ApiPath.topHeadlines,
       queryParameters: params,
     );
-    print(response);
     return NewsArticlesResponseDto.fromJson(response.data);
   }
 }

@@ -31,7 +31,12 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
-
+  assets:
+    - assets/home.png
+    - assets/home_selected.png
+    - assets/favorites.png
+    - assets/favorites_selected.png
+    - assets/search.png
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

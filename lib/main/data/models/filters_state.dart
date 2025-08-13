@@ -1,4 +1,4 @@
-part of '../../blocks/filters_blocks.dart';
+part of '../../bloc/filters_bloc.dart';
 
 class FiltersState extends Equatable {
   final String searchQuery;

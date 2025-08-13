@@ -1,4 +1,4 @@
-part of '../../blocks/news_list_bloc.dart';
+part of '../../bloc/news_list_bloc.dart';
 
 sealed class NewsListEvent extends Equatable {
   const NewsListEvent();

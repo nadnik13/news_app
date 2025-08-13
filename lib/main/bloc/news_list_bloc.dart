@@ -4,7 +4,7 @@ import 'package:stream_transform/stream_transform.dart';
 
 import '../data/models/news_article.dart';
 import '../data/models/news_category.dart';
-import '../data/repositories/news_repository.dart';
+import '../infrastructure/repositories/news_repository.dart';
 
 part '../data/models/news_list_event.dart';
 part '../data/models/news_list_state.dart';
