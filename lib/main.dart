@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:news_app/main/bloc/favorites_list_bloc.dart';
-import 'package:news_app/main/data/models/news_article.dart';
-import 'package:news_app/screens/favorites_screen.dart';
-import 'package:news_app/screens/home_screen.dart';
-import 'package:news_app/screens/one_news_screen.dart';
-import 'package:news_app/widgets/app_shell_scaffold.dart';
-
-import 'di/get_it.dart';
-import 'main/bloc/filters_bloc.dart';
-import 'main/bloc/news_list_bloc.dart';
+import 'package:news_app/di/get_it.dart';
+import 'package:news_app/favorites_list/bloc/favorites_list_bloc.dart';
+import 'package:news_app/favorites_list/ui/favorites_screen.dart';
+import 'package:news_app/news_list/bloc/filters_bloc.dart';
+import 'package:news_app/news_list/bloc/news_list_bloc.dart';
+import 'package:news_app/news_list/ui/home_screen.dart';
+import 'package:news_app/one_news/data/models/news_article.dart';
+import 'package:news_app/one_news/ui/one_news_screen.dart';
+import 'package:news_app/tab_bar/ui/app_shell_scaffold.dart';
 
 final _router = GoRouter(
   initialLocation: '/',
   routes: [
+    GoRoute(path: '/', redirect: (_, __) => '/news'),
     StatefulShellRoute.indexedStack(
       builder:
           (context, state, navShell) =>
@@ -23,8 +23,8 @@ final _router = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              name: 'home',
-              path: '/',
+              name: 'news',
+              path: '/news',
               builder:
                   (context, state) => MultiBlocProvider(
                     providers: [
@@ -37,6 +37,16 @@ final _router = GoRouter(
                     ],
                     child: HomeScreen(),
                   ),
+              routes: [
+                GoRoute(
+                  name: 'one_news',
+                  path: 'one_news',
+                  builder: (context, state) {
+                    final article = state.extra as NewsArticle;
+                    return OneNewsScreen(article: article);
+                  },
+                ),
+              ],
             ),
           ],
         ),
@@ -58,23 +68,27 @@ final _router = GoRouter(
                     ],
                     child: const FavoritesScreen(),
                   ),
+              routes: [
+                GoRoute(
+                  name: 'favorite_one_news',
+                  path: 'one_news',
+                  builder: (context, state) {
+                    final article = state.extra as NewsArticle;
+                    return OneNewsScreen(article: article);
+                  },
+                ),
+              ],
             ),
           ],
         ),
       ],
     ),
-    GoRoute(
-      name: 'one_news',
-      path: '/one_news',
-      builder: (context, state) {
-        final article = state.extra as NewsArticle;
-        return OneNewsScreen(article: article);
-      },
-    ),
   ],
 );
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DI.init();
   runApp(const MyApp());
 }
 
@@ -89,7 +103,6 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    DI.init();
   }
 
   @override
@@ -103,7 +116,10 @@ class _MyAppState extends State<MyApp> {
                   FavoritesListBloc(repository: DI.favoritesListRepository),
         ),
       ],
-      child: MaterialApp.router(routerConfig: _router),
+      child: MaterialApp.router(
+        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+        routerConfig: _router,
+      ),
     );
   }
 }
