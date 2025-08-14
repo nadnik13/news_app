@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_app/di/get_it.dart';
 import 'package:news_app/favorites_list/bloc/favorites_list_bloc.dart';
@@ -77,8 +77,6 @@ final _router = GoRouter(
 );
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await DI.init();
   runApp(const MyApp());
 }
 
@@ -90,27 +88,52 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  bool _isLoaded = false;
+
   @override
   void initState() {
     super.initState();
+    _load();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create:
-          (context) =>
-              FavoritesListBloc(repository: DI.favoritesListRepository),
-      child: MaterialApp.router(
-        theme: ThemeData(scaffoldBackgroundColor: Colors.white),
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: AppLocalizations.supportedLocales,
-        routerConfig: _router,
+    if (_isLoaded) {
+      return BlocProvider(
+        create:
+            (context) =>
+                FavoritesListBloc(repository: DI.favoritesListRepository),
+        child: MaterialApp.router(
+          theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: _router,
+        ),
+      );
+    }
+
+    return ColoredBox(
+      color: Colors.white,
+      child: Center(
+        child: SizedBox(
+          height: 128,
+          width: 128,
+          child: Image.asset('assets/app_icon.png', fit: BoxFit.scaleDown),
+        ),
       ),
     );
+  }
+
+  Future<void> _load() async {
+    await DI.init();
+    if (mounted) {
+      setState(() {
+        _isLoaded = true;
+      });
+    }
   }
 }

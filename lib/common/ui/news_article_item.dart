@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:news_app/common/infrastructure/utils/date_format_extention.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:news_app/common/infrastructure/utils/date_format_extention.dart';
 import 'package:news_app/one_news/data/models/news_article.dart';
 
-import '../../common/ui/star_widget.dart';
+import 'star_widget.dart';
 
 class NewsArticleItem extends StatelessWidget {
   final NewsArticle article;
@@ -47,7 +47,16 @@ class NewsArticleItem extends StatelessWidget {
                 Flexible(
                   flex: 123,
                   child: SizedBox.expand(
-                    child: Image.network(url, fit: BoxFit.cover),
+                    child: Image.network(
+                      url,
+                      fit: BoxFit.cover,
+                      errorBuilder:
+                          (
+                            BuildContext context,
+                            Object error,
+                            StackTrace? stackTrace,
+                          ) => const SizedBox(),
+                    ),
                   ),
                 ),
               Flexible(

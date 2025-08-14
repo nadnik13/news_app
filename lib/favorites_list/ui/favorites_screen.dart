@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:news_app/common/ui/news_article_item.dart';
 import 'package:news_app/favorites_list/bloc/favorites_list_bloc.dart';
-import 'package:news_app/news_list/ui/news_article_item.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});

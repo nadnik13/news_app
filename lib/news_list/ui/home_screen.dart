@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_app/common/ui/lazy_loading_listview_builder.dart';
+import 'package:news_app/common/ui/news_article_item.dart';
 import 'package:news_app/news_list/bloc/filters_bloc.dart';
 import 'package:news_app/news_list/bloc/news_list_bloc.dart';
 import 'package:news_app/news_list/ui/filters_widget.dart';
-import 'package:news_app/news_list/ui/news_article_item.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

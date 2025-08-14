@@ -27,8 +27,14 @@ class StarWidget extends StatelessWidget {
                 ),
             child:
                 isFavorite
-                    ? SizedBox(child: Image.asset('assets/filled_star.png'))
-                    : SizedBox(child: Image.asset('assets/star.png')),
+                    ? SizedBox(
+                      child: Image.asset('assets/filled_star.png'),
+                      height: 43,
+                    )
+                    : SizedBox(
+                      child: Image.asset('assets/star.png'),
+                      height: 43,
+                    ),
           ),
         );
       },

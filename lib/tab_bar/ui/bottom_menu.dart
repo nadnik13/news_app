@@ -21,47 +21,44 @@ class BottomMenu extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Material(
           color: Colors.transparent,
-          child: Padding(
-            padding: EdgeInsets.all(8),
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Color(0xFFCECECE), width: 0.5),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.15), // цвет тени
-                    offset: Offset(0, 3), // смещение: x=0, y=4 — только вниз
-                    blurRadius: 6.1, // размытие тени
-                    spreadRadius: 0, // насколько тень распространяется
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Color(0xFFCECECE), width: 0.5),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15), // цвет тени
+                  offset: Offset(0, 3), // смещение: x=0, y=4 — только вниз
+                  blurRadius: 6.1, // размытие тени
+                  spreadRadius: 0, // насколько тень распространяется
+                ),
+              ],
+            ),
+            child: SizedBox(
+              height: 84,
+              child: Row(
+                children: [
+                  _BottomItem(
+                    asset:
+                        selected == BottomTab.home
+                            ? 'assets/home_selected.png'
+                            : 'assets/home.png',
+                    onTap: onHomeTap,
+                    width: 36,
+                    height: 27,
+                  ),
+
+                  _BottomItem(
+                    asset:
+                        selected == BottomTab.favorites
+                            ? 'assets/favorites_selected.png'
+                            : 'assets/favorites.png',
+                    onTap: onFavoritesTap,
+                    width: 41,
+                    height: 33,
                   ),
                 ],
-              ),
-              child: SizedBox(
-                height: 84,
-                child: Row(
-                  children: [
-                    _BottomItem(
-                      asset:
-                          selected == BottomTab.home
-                              ? 'assets/home_selected.png'
-                              : 'assets/home.png',
-                      onTap: onHomeTap,
-                      width: 36,
-                      height: 27,
-                    ),
-
-                    _BottomItem(
-                      asset:
-                          selected == BottomTab.favorites
-                              ? 'assets/favorites_selected.png'
-                              : 'assets/favorites.png',
-                      onTap: onFavoritesTap,
-                      width: 41,
-                      height: 33,
-                    ),
-                  ],
-                ),
               ),
             ),
           ),
