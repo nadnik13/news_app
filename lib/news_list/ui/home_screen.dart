@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_app/common/ui/lazy_loading_listview_builder.dart';
 import 'package:news_app/news_list/bloc/filters_bloc.dart';
@@ -53,15 +54,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       return SliverFillRemaining(
                         hasScrollBody: false,
                         child: Center(
-                          child: Text(state.errorMessage ?? 'Ошибка загрузки'),
+                          child: Text(
+                            state.errorMessage ??
+                                AppLocalizations.of(context)!.load_error,
+                          ),
                         ),
                       );
                     }
 
                     if (state.items.isEmpty) {
-                      return const SliverFillRemaining(
+                      return SliverFillRemaining(
                         hasScrollBody: false,
-                        child: Center(child: Text('Ничего не найдено')),
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.nothing_found,
+                          ),
+                        ),
                       );
                     }
                     return SliverList.builder(
@@ -72,6 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           onTap:
                               () => context.go('/news/one_news', extra: item),
                           article: item,
+                          showStar: false,
                         );
                       },
                     );

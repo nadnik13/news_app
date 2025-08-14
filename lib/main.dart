@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_app/di/get_it.dart';
@@ -55,19 +57,7 @@ final _router = GoRouter(
             GoRoute(
               name: 'favorites',
               path: '/favorites',
-              builder:
-                  (context, state) => MultiBlocProvider(
-                    providers: [
-                      BlocProvider(create: (_) => FiltersBloc()),
-                      BlocProvider(
-                        create:
-                            (context) => FavoritesListBloc(
-                              repository: DI.favoritesListRepository,
-                            ),
-                      ),
-                    ],
-                    child: const FavoritesScreen(),
-                  ),
+              builder: (context, state) => const FavoritesScreen(),
               routes: [
                 GoRoute(
                   name: 'favorite_one_news',
@@ -107,17 +97,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => FiltersBloc()),
-        BlocProvider(
-          create:
-              (context) =>
-                  FavoritesListBloc(repository: DI.favoritesListRepository),
-        ),
-      ],
+    return BlocProvider(
+      create:
+          (context) =>
+              FavoritesListBloc(repository: DI.favoritesListRepository),
       child: MaterialApp.router(
         theme: ThemeData(scaffoldBackgroundColor: Colors.white),
+        localizationsDelegates: const [
+          AppLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: AppLocalizations.supportedLocales,
         routerConfig: _router,
       ),
     );

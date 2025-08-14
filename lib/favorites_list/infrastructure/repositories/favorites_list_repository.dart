@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:news_app/one_news/data/models/news_article.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class FavoritesListRepository {
   Future<List<NewsArticle>> fetchAll();
@@ -11,14 +10,14 @@ abstract class FavoritesListRepository {
 }
 
 class FavoritesListRepositoryImpl implements FavoritesListRepository {
+  final SharedPreferences storage;
   final _varName = 'list';
 
-  FavoritesListRepositoryImpl();
+  FavoritesListRepositoryImpl({required this.storage});
 
   @override
   Future<List<NewsArticle>> fetchAll() async {
-    final sharedPreferences = await SharedPreferences.getInstance();
-    final listString = sharedPreferences.getStringList(_varName);
+    final listString = storage.getStringList(_varName);
     return (listString ?? [])
         .map((a) => NewsArticle.fromJson(json.decode(a)))
         .whereType<NewsArticle>()
@@ -27,9 +26,8 @@ class FavoritesListRepositoryImpl implements FavoritesListRepository {
 
   @override
   Future<void> saveData(List<NewsArticle> data) async {
-    final sharedPreferences = await SharedPreferences.getInstance();
     List<String> usrList =
         data.map((item) => jsonEncode(item.toJson())).toList();
-    sharedPreferences.setStringList(_varName, usrList);
+    storage.setStringList(_varName, usrList);
   }
 }

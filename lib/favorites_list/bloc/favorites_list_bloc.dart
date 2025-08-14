@@ -1,8 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
-import 'package:news_app/one_news/data/models/news_article.dart';
 import 'package:news_app/favorites_list/infrastructure/repositories/favorites_list_repository.dart';
+import 'package:news_app/one_news/data/models/news_article.dart';
 
 part 'package:news_app/favorites_list/data/models/favorites_event.dart';
 part 'package:news_app/favorites_list/data/models/favorites_state.dart';
@@ -21,8 +20,17 @@ class FavoritesListBloc extends Bloc<FavoritesEvent, FavoritesState> {
     InitialFavoriteListRequested event,
     Emitter<FavoritesState> emit,
   ) async {
-    final next = await repository.fetchAll();
-    emit(state.copyWith(articles: next));
+    try {
+      final next = await repository.fetchAll();
+      emit(state.copyWith(articles: next, status: FavoritesStatus.success));
+    } catch (e) {
+      emit(
+        state.copyWith(
+          status: FavoritesStatus.failure,
+          errorMessage: e.toString(),
+        ),
+      );
+    }
   }
 
   Future<void> _onNewsAdded(

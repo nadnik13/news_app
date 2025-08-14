@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:news_app/news_list/bloc/filters_bloc.dart';
 import 'package:news_app/news_list/data/models/news_category.dart';
 
@@ -29,11 +30,12 @@ class CategoriesRowWidget extends StatelessWidget {
         );
 
         // вычисляем ширину самой длинной категории с учетом локального масштабирования текста
+        final l = AppLocalizations.of(context)!;
         final TextScaler scaler = MediaQuery.of(context).textScaler;
         double maxLabelWidth = 0;
         for (final cat in NewsCategory.values) {
           final tp = TextPainter(
-            text: TextSpan(text: cat.name, style: style),
+            text: TextSpan(text: cat.title(l), style: style),
             textDirection: TextDirection.ltr,
             maxLines: 1,
             textScaler: scaler,
@@ -63,7 +65,7 @@ class CategoriesRowWidget extends StatelessWidget {
                       ),
                     ),
                     color: isSelected ? Colors.blueAccent : Colors.grey,
-                    child: Center(child: Text(e.displayTitle, style: style)),
+                    child: Center(child: Text(e.title(l), style: style)),
                   ),
                 ),
               );

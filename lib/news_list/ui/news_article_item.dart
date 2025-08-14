@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:news_app/one_news/data/models/news_article.dart';
 
+import '../../common/ui/star_widget.dart';
+
 class NewsArticleItem extends StatelessWidget {
   final NewsArticle article;
   final VoidCallback onTap;
+  final bool showStar;
 
   const NewsArticleItem({
     super.key,
     required this.article,
     required this.onTap,
+    required this.showStar,
   });
 
   @override
@@ -55,14 +59,24 @@ class NewsArticleItem extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            article.title,
-                            maxLines: 2,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 24,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                          Stack(
+                            alignment: AlignmentDirectional.topEnd,
+                            children: [
+                              Text(
+                                article.title,
+                                maxLines: 2,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 24,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              if (showStar)
+                                SizedBox(
+                                  height: 32,
+                                  child: StarWidget(article: article),
+                                ),
+                            ],
                           ),
                           Text(
                             article.subtitle,

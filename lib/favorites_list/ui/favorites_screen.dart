@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:news_app/favorites_list/bloc/favorites_list_bloc.dart';
 import 'package:news_app/news_list/ui/news_article_item.dart';
@@ -28,10 +29,36 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
           bottom: false,
           child: CustomScrollView(
             slivers: [
+              //const SliverToBoxAdapter(child: SizedBox(height: 96)),
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 19),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 19,
+                  vertical: 96,
+                ),
                 sliver: BlocBuilder<FavoritesListBloc, FavoritesState>(
                   builder: (context, state) {
+                    if (state.status == FavoritesStatus.failure) {
+                      return SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Center(
+                          child: Text(
+                            state.errorMessage ??
+                                AppLocalizations.of(context)!.load_error,
+                          ),
+                        ),
+                      );
+                    }
+
+                    if (state.articles.isEmpty) {
+                      return SliverFillRemaining(
+                        hasScrollBody: false,
+                        child: Center(
+                          child: Text(
+                            AppLocalizations.of(context)!.nothing_found,
+                          ),
+                        ),
+                      );
+                    }
                     return SliverList.builder(
                       itemCount: state.articles.length,
                       itemBuilder: (context, index) {
@@ -43,30 +70,18 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                                 extra: item,
                               ),
                           article: item,
+                          showStar: true,
                         );
                       },
                     );
                   },
                 ),
               ),
-              const SliverToBoxAdapter(child: SizedBox(height: 96)),
+              //const SliverToBoxAdapter(child: SizedBox(height: 96)),
             ],
           ),
         ),
       ),
     );
   }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     appBar: AppBar(title: const Text('Favorites')),
-  //     body: const SizedBox.shrink(),
-  //     bottomNavigationBar: BottomMenu(
-  //       selected: BottomTab.favorites,
-  //       onHomeTap: () => context.go('/'),
-  //       onFavoritesTap: () {},
-  //     ),
-  //   );
-  // }
 }
