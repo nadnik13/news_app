@@ -33,7 +33,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
               SliverPadding(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 19,
-                  vertical: 96,
+                  vertical: 76,
                 ),
                 sliver: BlocBuilder<FavoritesListBloc, FavoritesState>(
                   builder: (context, state) {
@@ -77,7 +77,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                   },
                 ),
               ),
-              //const SliverToBoxAdapter(child: SizedBox(height: 96)),
+              const SliverToBoxAdapter(child: SizedBox(height: 96)),
             ],
           ),
         ),

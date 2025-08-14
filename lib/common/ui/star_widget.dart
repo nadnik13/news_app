@@ -14,9 +14,11 @@ class StarWidget extends StatelessWidget {
     return BlocBuilder<FavoritesListBloc, FavoritesState>(
       builder: (context, favoritesState) {
         final isFavorite = favoritesState.articles.contains(article);
-        return Padding(
-          padding: const EdgeInsets.all(2.0),
+        return Material(
+          color: Colors.transparent,
+          shape: const CircleBorder(),
           child: InkWell(
+            customBorder: const CircleBorder(),
             onTap:
                 () => context.read<FavoritesListBloc>().add(
                   isFavorite

@@ -18,7 +18,7 @@ class BottomMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 19.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Material(
           color: Colors.transparent,
           child: Padding(

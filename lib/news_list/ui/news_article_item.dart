@@ -18,7 +18,6 @@ class NewsArticleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String? url = article.imageUrl;
-
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
@@ -90,13 +89,16 @@ class NewsArticleItem extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Text(
-                          _formatDate(article.publishedAt),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 17,
+                      Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: Text(
+                            _formatDate(article.publishedAt),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 17,
+                            ),
                           ),
                         ),
                       ),
