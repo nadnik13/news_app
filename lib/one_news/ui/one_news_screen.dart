@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:news_app/common/infrastructure/utils/date_format_extention.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:news_app/one_news/data/models/news_article.dart';
 
 import '../../common/ui/star_widget.dart';
@@ -22,7 +24,10 @@ class OneNewsScreen extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () => context.pop(),
-                    child: SizedBox(child: Image.asset('assets/exit.png')),
+                    child: SizedBox(
+                      child: Image.asset('assets/exit.png'),
+                      width: 28,
+                    ),
                   ),
                   Spacer(),
                   StarWidget(article: article),
@@ -57,7 +62,10 @@ class OneNewsScreen extends StatelessWidget {
                         ),
                         Spacer(),
                         Text(
-                          _formatDate(article.publishedAt),
+                          article.publishedAt.toText(
+                            pattern:
+                                AppLocalizations.of(context)?.date_pattern,
+                          ),
                           style: TextStyle(
                             fontWeight: FontWeight.w400,
                             fontSize: 19,
@@ -104,12 +112,4 @@ class OneNewsScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-//:TODO убать
-String _formatDate(DateTime? dt) {
-  if (dt == null) return '';
-  final String mm = dt.month.toString().padLeft(2, '0');
-  final String dd = dt.day.toString().padLeft(2, '0');
-  return '$mm.$dd.${dt.year}';
 }

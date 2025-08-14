@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:news_app/common/infrastructure/utils/iterable_extension.dart';
 import 'package:news_app/favorites_list/infrastructure/repositories/favorites_list_repository.dart';
 import 'package:news_app/one_news/data/models/news_article.dart';
 
@@ -21,8 +22,8 @@ class FavoritesListBloc extends Bloc<FavoritesEvent, FavoritesState> {
     Emitter<FavoritesState> emit,
   ) async {
     try {
-      final next = await repository.fetchAll();
-      emit(state.copyWith(articles: next, status: FavoritesStatus.success));
+      final news = await repository.fetchAll();
+      await _updateFavoriteNews(news: news, emit: emit, saveToRepo: false);
     } catch (e) {
       emit(
         state.copyWith(
@@ -37,17 +38,29 @@ class FavoritesListBloc extends Bloc<FavoritesEvent, FavoritesState> {
     FavoriteNewsAdded event,
     Emitter<FavoritesState> emit,
   ) async {
-    final next = {...state.articles, event.article}.toList();
-    emit(state.copyWith(articles: next));
-    await repository.saveData(state.articles);
+    final news = {...state.articles, event.article}.toList();
+    await _updateFavoriteNews(news: news, emit: emit);
   }
 
   Future<void> _onNewsRemoved(
     FavoriteNewsRemoved event,
     Emitter<FavoritesState> emit,
   ) async {
-    final next = state.articles.where((e) => e != event.article).toList();
-    emit(state.copyWith(articles: next));
-    await repository.saveData(state.articles);
+    final news = state.articles.where((e) => e != event.article).toList();
+    await _updateFavoriteNews(news: news, emit: emit);
   }
+
+  Future<void> _updateFavoriteNews({
+    required List<NewsArticle> news,
+    required Emitter<FavoritesState> emit,
+    bool saveToRepo = true,
+  }) async {
+    emit(state.copyWith(articles: _sort(news)));
+    if (saveToRepo) {
+      await repository.saveData(state.articles);
+    }
+  }
+
+  List<NewsArticle> _sort(List<NewsArticle> news) =>
+      news.sorted((a, b) => b.publishedAt.compareTo(a.publishedAt));
 }

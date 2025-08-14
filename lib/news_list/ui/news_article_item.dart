@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:news_app/common/infrastructure/utils/date_format_extention.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:news_app/one_news/data/models/news_article.dart';
 
 import '../../common/ui/star_widget.dart';
@@ -94,7 +96,10 @@ class NewsArticleItem extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.bottomRight,
                           child: Text(
-                            _formatDate(article.publishedAt),
+                            article.publishedAt.toText(
+                              pattern:
+                                  AppLocalizations.of(context)?.date_pattern,
+                            ),
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 17,
@@ -112,11 +117,4 @@ class NewsArticleItem extends StatelessWidget {
       ),
     );
   }
-}
-
-String _formatDate(DateTime? dt) {
-  if (dt == null) return '';
-  final String mm = dt.month.toString().padLeft(2, '0');
-  final String dd = dt.day.toString().padLeft(2, '0');
-  return '$mm.$dd.${dt.year}';
 }

@@ -9,10 +9,10 @@ class NewsArticle extends Equatable {
   final String subtitle;
   final String source;
   final String? imageUrl;
-  final DateTime? publishedAt;
+  final DateTime publishedAt;
   final String text;
 
-  NewsArticle({
+  const NewsArticle({
     required this.title,
     required this.subtitle,
     required this.source,
